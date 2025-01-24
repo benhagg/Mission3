@@ -11,6 +11,7 @@ namespace Mission3
         // when using {get; set;} like this C# will create a private field for you behind the scenes
         public string Name { get; set; }
         public int Quantity { get; set; }
+        // using a hash set for no duplacates and fast lookup times
         public HashSet<string> Categories { get; set; }
         public DateTime ExpirationDate { get; set; }
         // constructor is public to allow other classes to create FoodItem objects

@@ -4,10 +4,10 @@ internal class Program
     private static void Main(string[] args)
     {
         List<FoodItem> Inventory = new List<FoodItem>();
+
         // main program logic
         while (true)
         {
-            
             Console.WriteLine("Inventory Management System");
             Console.WriteLine("1. Add Item");
             Console.WriteLine("2. Remove Item");
@@ -25,17 +25,42 @@ internal class Program
                 {
                     Console.WriteLine("Enter item name: ");
                     string name = Console.ReadLine();
-                    Console.WriteLine("Enter item quantity: ");
-                    int quantity = int.Parse(Console.ReadLine());
+                    int quantity = 0;
+                    while (true)
+                    {
+                        Console.WriteLine("Enter item quantity: ");
+                        // error handling. Assign the output to quantity with out keyword
+                        if (int.TryParse(Console.ReadLine(), out quantity) && quantity >= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid quantity. Please enter a positive number.");
+                        }
+                    }
                     Console.WriteLine("Enter item categories (comma separated): ");
                     //create a new hash set with the categories, split using delimiter ',' and trim spaces
                     HashSet<string> categories = new HashSet<string>(Console.ReadLine().Split(',').Select(c => c.Trim()));
-                    Console.WriteLine("Enter item expiration date (yyyy-mm-dd): ");
                     // parse the date string into a DateTime object
-                    DateTime expirationDate = DateTime.Parse(Console.ReadLine());
+                    DateTime expirationDate;
+                    while (true)
+                    {
+                        Console.WriteLine("Enter item expiration date (yyyy-mm-dd): ");
+                        // error handling for date time entering. out keyword is used to assign the output to expirationDate
+                        if (DateTime.TryParse(Console.ReadLine(), out expirationDate))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid date format. Please enter the date in yyyy-mm-dd format.");
+                        }
+                    }
                     // create new FoodItem object and add it to the inventory
                     FoodItem newItem = new(name, quantity, categories, expirationDate);
                     Inventory.Add(newItem);
+                    Console.WriteLine(" "); // whitespace for formatting
                 }
                 else if (choice == "2")// remove food item from inventory
                 {
@@ -46,19 +71,23 @@ internal class Program
                     int itemsRemoved = Inventory.RemoveAll(i => i.Name == nameToRemove);
                     if (itemsRemoved != 0)
                     {
-                        Console.WriteLine($"Removed all {nameToRemove} from inventory.");
+                        Console.WriteLine($"\nRemoved {itemsRemoved}{nameToRemove} from inventory.");
                     }
                     else
                     {
-                        Console.WriteLine($"Item {nameToRemove} not found in inventory.");
+                        Console.WriteLine($"Item {nameToRemove} not found in inventory.\n");
                     }
                 }
                 else if (choice == "3")
-                {
+                {   
+                    int count = Inventory.Count;
+                    // string interpolation with ternary operators for grammar
+                    Console.WriteLine($"\nThere {(count == 1 ? "is":"are")} {count} {(count == 1 ? "item" : "items")} in the inventory.\n");
                     foreach (var item in Inventory)
                     {
                         Console.WriteLine(item);
                     }
+                    Console.WriteLine("\n"); // whitespace for formatting
                 }
                 else if (choice == "4")
                 {
